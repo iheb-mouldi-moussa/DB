@@ -17,7 +17,7 @@ public class Helper {
     public static MysqlDataSource getMySQLDataSource() {
 
         Properties props = new Properties();
-        String fileName = "/home/iheb/Desktop/dev/sql/test/src/main/resources/db.properties";
+        String fileName = "/home/iheb/Desktop/dev/sql/DB/test/src/main/resources/db.properties";
 
         try (FileInputStream fis = new FileInputStream(fileName)) {
             props.load(fis);

@@ -41,12 +41,12 @@ public class AuthorsDAO {
 		}
 	}
 
-	public List<Authors> searchAuthorss(String firstName) throws Exception {
+	public List<Authors> searchAuthors(int id, String firstName, String lastName, String email) throws Exception {
 		List<Authors> list = new ArrayList<>();
 
 		try {
 			firstName += "%";
-			myStmt = myConn.prepareStatement("select * from Authors where Firstname like ?");
+			myStmt = myConn.prepareStatement("select * from Authors where Firstname like ? and ");
 
 			myStmt.setString(1, firstName);
 
@@ -86,6 +86,43 @@ public class AuthorsDAO {
 
 	}
 
+	public int getAuthor(int id, String firstName, String lastName, String email) throws SQLException
+	{
+		myStmt = myConn.prepareStatement("select id from Authors where id=? and Firstname=? and Lastname=? and mail=?");
+		myStmt.setInt(1, id);
+		myStmt.setString(2, firstName);
+		myStmt.setString(3, lastName);
+		myStmt.setString(4, email);
+		myRs =  myStmt.executeQuery();
+		int res = -1;
+		if(myRs.next())
+		{
+			res = 1;
+		}
+
+		return res;
+		
+	}
+
+	public void delAuthor(int id, String firstName, String lastName, String email) throws SQLException {
+
+		try {
+			if(getAuthor(id, firstName, lastName, email) == -1)
+			{
+				System.out.println("ERROR Author does not exist");
+				return;			
+			}
+
+			myStmt = myConn.prepareStatement("delete from Authors where id=?");
+			myStmt.setInt(1, id);
+			myStmt.executeUpdate();
+
+		} finally {
+			//Helper.closeConnection(myConn, myStmt, myRs);
+		}
+
+	}
+
 	public int getId(int id) throws SQLException {
 
 		int res = -1;
@@ -104,15 +141,14 @@ public class AuthorsDAO {
 		String firstName = myRs.getString("Firstname");
 		String mail = myRs.getString("mail");
 
-		Authors tempAuthors = new Authors(id, lastName, firstName, mail);
-
+		Authors tempAuthors = new Authors(id, firstName, lastName, mail);
 		return tempAuthors;
 	}
 
 	public static void main(String[] args) throws Exception {
 
 		AuthorsDAO dao = new AuthorsDAO();
-		dao.getId(6);
+		dao.delAuthor(1, "Iheb", "Moussa", "iheb.moussa@gmail.com");
 		// System.out.println(dao.searchAuthorss("Iheb"));
 		//dao.addAuthor(7, "t", "f", "g");
 		// System.out.println(dao.getAllAuthorss());

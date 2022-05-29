@@ -21,6 +21,7 @@ public class AuthorsFrame extends JFrame {
     private DefaultTableModel defaultTableModel;
     private JTable table;
     private AuthorsDAO authorsDAO;
+    private LoginFrame loginFrame;
 
     public void init() throws Exception {
         authorsDAO = new AuthorsDAO();
@@ -128,10 +129,51 @@ public class AuthorsFrame extends JFrame {
             }
         });
 
+        
+
         JButton delButton = new JButton("Delete");
         gbc.gridx = 2;
         gbc.gridy = 1;
         consolPanel.add(delButton, gbc);
+
+        delButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                String firstName = firstNameText.getText();
+                String lastName = lastNameText.getText();
+                String temp = idText.getText();
+                String email = emailText.getText();
+                int id = 0;
+
+                try {
+                    id = Integer.parseInt(temp);
+                    authorsDAO.delAuthor(id, firstName, lastName, email);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("id");
+                    model.addColumn("FirstName");
+                    model.addColumn("LastName");
+                    model.addColumn("Email");
+
+                    List<Authors> authors = authorsDAO.getAllAuthorss();
+                    for (Authors author : authors) {
+                        model.addRow(new Object[] { author.getId(),
+                                author.getFirstname(),
+                                author.getLastname(), author.getMail() });
+                    }
+
+                    table.setModel(model);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
 
         JButton searchButton = new JButton("Search");
         gbc.gridx = 2;
@@ -143,6 +185,15 @@ public class AuthorsFrame extends JFrame {
         gbc.gridy = 3;
         consolPanel.add(exitButton, gbc);
 
+        exitButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                setVisible(false);
+                loginFrame = new LoginFrame();
+                loginFrame.init();
+            }
+        });
         setLayout(new GridLayout(0, 2, 10, 10));
         add(tablePanel);
         add(consolPanel);

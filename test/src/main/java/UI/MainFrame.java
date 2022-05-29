@@ -33,8 +33,8 @@ public class MainFrame extends JFrame {
             
         }
 
-        JTextField choice = new JTextField("Choice");
-        choice.setPreferredSize(new Dimension(10, 10));
+        JTextField choice = new JTextField(11);
+        //choice.setPreferredSize(new Dimension(10, 10));
         JLabel choiceLabel = new JLabel("Select a table from this list : Authors, Articles, Comments",
          SwingConstants.RIGHT);
         JPanel choicePannel = new JPanel();

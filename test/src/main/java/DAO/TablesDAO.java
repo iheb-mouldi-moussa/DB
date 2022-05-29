@@ -37,7 +37,7 @@ public class TablesDAO {
 
            return result;
         } finally {
-            Helper.closeConnection(myConn, myStmt, myRSet);
+            //Helper.closeConnection(myConn, myStmt, myRSet);
         }
         
     }

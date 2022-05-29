@@ -5,28 +5,30 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.table.DefaultTableModel;
 
 import DAO.AuthorsDAO;
 import Tables.Authors;
+import javafx.event.Event;
 import javafx.scene.control.ButtonType;
 
-public class AuthorsFrame extends JFrame{
+public class AuthorsFrame extends JFrame {
 
     private DefaultTableModel defaultTableModel;
     private JTable table;
     private AuthorsDAO authorsDAO;
 
-    public void init() throws Exception
-    {
+    public void init() throws Exception {
         authorsDAO = new AuthorsDAO();
         defaultTableModel = new DefaultTableModel();
         table = new JTable(defaultTableModel);
         table.setPreferredScrollableViewportSize(new Dimension(500, 100));
-        //table.setFillsViewportHeight(true);
-        //table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+        // table.setFillsViewportHeight(true);
+        // table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         defaultTableModel.addColumn("id");
         defaultTableModel.addColumn("FirstName");
         defaultTableModel.addColumn("LastName");
@@ -34,8 +36,8 @@ public class AuthorsFrame extends JFrame{
 
         List<Authors> authors = authorsDAO.getAllAuthorss();
         for (Authors author : authors) {
-            defaultTableModel.addRow(new Object[]{author.getId(), author.getFirstname(),
-            author.getLastname(), author.getMail()});
+            defaultTableModel.addRow(new Object[] { author.getId(), author.getFirstname(),
+                    author.getLastname(), author.getMail() });
         }
 
         JPanel tablePanel = new JPanel(new BorderLayout());
@@ -80,7 +82,6 @@ public class AuthorsFrame extends JFrame{
         gbc.gridx = 1;
         gbc.gridy = 3;
         consolPanel.add(emailText, gbc);
-        
 
         JButton addButton = new JButton("Add");
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -88,13 +89,50 @@ public class AuthorsFrame extends JFrame{
         gbc.gridx = 2;
         gbc.gridy = 0;
         consolPanel.add(addButton, gbc);
-       
+
+        addButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                String firstName = firstNameText.getText();
+                String lastName = lastNameText.getText();
+                String temp = idText.getText();
+                String email = emailText.getText();
+                int id = 0;
+
+                try {
+                    id = Integer.parseInt(temp);
+                    authorsDAO.addAuthor(id, firstName, lastName, email);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("id");
+                    model.addColumn("FirstName");
+                    model.addColumn("LastName");
+                    model.addColumn("Email");
+
+                    List<Authors> authors = authorsDAO.getAllAuthorss();
+                    for (Authors author : authors) {
+                        model.addRow(new Object[] { author.getId(),
+                                author.getFirstname(),
+                                author.getLastname(), author.getMail() });
+                    }
+
+                    table.setModel(model);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
         JButton delButton = new JButton("Delete");
         gbc.gridx = 2;
         gbc.gridy = 1;
         consolPanel.add(delButton, gbc);
-        
+
         JButton searchButton = new JButton("Search");
         gbc.gridx = 2;
         gbc.gridy = 2;
@@ -104,31 +142,9 @@ public class AuthorsFrame extends JFrame{
         gbc.gridx = 2;
         gbc.gridy = 3;
         consolPanel.add(exitButton, gbc);
-        
-        
-        /*
-        JPanel textPanel = new JPanel(new BorderLayout());
-        textPanel.setLayout(new GridLayout(4, 1));
-        textPanel.add(idText);
-        textPanel.add(firstNameText);
-        textPanel.add(lastNameText);
-        textPanel.add(emailText);
-        textPanel.setPreferredSize(new Dimension(10, 10));  
-        */
-
-
-        /*JPanel buttoPanel = new JPanel(new BorderLayout());
-        buttoPanel.setLayout(new GridLayout(3, 0));
-        buttoPanel.add(addButton);
-        buttoPanel.add(delButton);
-        buttoPanel.add(exitButton);
-        buttoPanel.setPreferredSize(new Dimension(10, 10));
-        */
 
         setLayout(new GridLayout(0, 2, 10, 10));
         add(tablePanel);
-        //add(textPanel);
-        //add(buttoPanel);
         add(consolPanel);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -140,9 +156,8 @@ public class AuthorsFrame extends JFrame{
 
     public static void main(String[] args) {
         AuthorsFrame authorsFrame = new AuthorsFrame();
-        try
-        {
-        authorsFrame.init();
+        try {
+            authorsFrame.init();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -3,6 +3,7 @@ package Helpers;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,37 +11,45 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class Helper {
 
-    public static MysqlDataSource getMySQLDataSource() {
+    private static Properties props;
+    private static Properties getConnectionData() {
 
-        Properties props = new Properties();
+        props = new Properties();
+
         String fileName = "/home/iheb/Desktop/dev/sql/DB/test/src/main/resources/db.properties";
 
-        try (FileInputStream fis = new FileInputStream(fileName)) {
-            props.load(fis);
+        try (FileInputStream in = new FileInputStream(fileName)) {
+            props.load(in);
         } catch (IOException ex) {
             Logger lgr = Logger.getLogger(Helper.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
 
-        MysqlDataSource ds = new MysqlDataSource();
-        ds.setURL(props.getProperty("mysql.url"));
-        ds.setUser(props.getProperty("mysql.username"));
-        ds.setPassword(props.getProperty("mysql.password"));
-
-        return ds;
+        return props;
     }
 
+
     public static Connection getConnection() throws Exception {
-        Connection myConn;
+        
+        props = getConnectionData();
+
+        String url = props.getProperty("db.url");
+        String user = props.getProperty("db.username");
+        String passwd = props.getProperty("db.password");
+
+        Connection myConn = DriverManager.getConnection(url, user, passwd);
         // connect to database
-        myConn = getMySQLDataSource().getConnection();
         //System.out.println("DB connection successful to: " + Helper.getMySQLDataSource().getUrl());
         return myConn;
 
+    }
+
+    public static String getUrl() throws Exception{
+        props = getConnectionData();
+        return props.getProperty("db.url");
     }
 
     public static void closeConnection(Connection conn, Statement se,ResultSet rs) throws SQLException

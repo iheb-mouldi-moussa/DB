@@ -20,6 +20,9 @@ CREATE USER 'R17user'@'localhost' IDENTIFIED BY 'R17';
 
 USE `r17DB` ;
 UNINSTALL COMPONENT 'file://component_validate_password';
+
+
+
 GRANT ALL ON `r17DB`.* TO 'R17user'@'localhost';
 
 -- -----------------------------------------------------

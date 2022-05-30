@@ -18,7 +18,7 @@ public class AuthorsDAO {
 
 		// connect to database
 		myConn = Helper.getConnection();
-		System.out.println("DB connection successful to: " + Helper.getMySQLDataSource().getUrl());
+		System.out.println("DB connection successful to: " + Helper.getUrl());
 	}
 
 	public List<Authors> getAllAuthorss() throws Exception {

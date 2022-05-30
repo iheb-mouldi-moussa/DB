@@ -189,7 +189,7 @@ public class AuthorsFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                setVisible(false);
+                dispose();
                 loginFrame = new LoginFrame();
                 loginFrame.init();
             }

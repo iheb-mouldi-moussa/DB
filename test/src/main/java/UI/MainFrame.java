@@ -18,13 +18,14 @@ public class MainFrame extends JFrame {
     private TablesDAO tablesDAO;
     private DefaultTableModel defaultTableModel;
     private JTable table;
+    private AuthorsFrame authorsFrame;
 
     public void init() throws Exception {
 
         tablesDAO = new TablesDAO();
         defaultTableModel = new DefaultTableModel();
         table = new JTable(defaultTableModel);
-        table.setPreferredScrollableViewportSize(new Dimension(200, 200));
+        table.setPreferredScrollableViewportSize(new Dimension(200, 100));
         table.setFillsViewportHeight(true);
         defaultTableModel.addColumn("Tables_in_r17DB");
         List<AllTables> tables = tablesDAO.getAllTables();
@@ -33,65 +34,61 @@ public class MainFrame extends JFrame {
             
         }
 
-        JTextField choice = new JTextField(11);
-        //choice.setPreferredSize(new Dimension(10, 10));
-        JLabel choiceLabel = new JLabel("Select a table from this list : Authors, Articles, Comments",
-         SwingConstants.RIGHT);
-        JPanel choicePannel = new JPanel();
-        choicePannel.add(choiceLabel);
-        choicePannel.add(choice);
-        choicePannel.setLayout(new GridLayout(1, 0));
 
-        JButton chooseButton = new JButton("Choose");
-        JPanel panelButton = new JPanel();
-        panelButton.setLayout(new GridLayout(1,0));
-        panelButton.add(chooseButton);
+        JPanel tablePanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         
-        chooseButton.addActionListener(new ActionListener()
-        {
+        tablePanel.add(new JScrollPane(table), gbc);
 
+        JLabel selectJLabel = new JLabel("Select a table");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        tablePanel.add(selectJLabel, gbc);
+
+        JButton authorsButton = new JButton("Authors");
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 12, 0, 0);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        tablePanel.add(authorsButton, gbc);
+
+
+        authorsButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent arg0) {
-                String table = choice.getText();
-                switch (table)
-                {
-                    case "Authors":
-                        AuthorsFrame authorsFrame = new AuthorsFrame();
-                        try {
-                            authorsFrame.init();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        dispose();
-                        break;
-                /*    case "Articles":
-                        ArticlesFrame articlesFrame = new ArticlesFrame();
-                        articlesFrame.init();
-                        dispose();
-                        break;
-                    case "Comments":
-                        CommentsFrame commentsFrame = new CommentsFrame();
-                        commentsFrame.init();
-                        dispose();
-                        break; */
-                    default:
-                        JOptionPane.showMessageDialog(MainFrame.this, "Check Table Name", 
-                        "Try Again", JOptionPane.ERROR_MESSAGE);
+            public void actionPerformed(ActionEvent e)
+            {
+                authorsFrame = new AuthorsFrame();
+                try {
+                    authorsFrame.init();
+                    dispose();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
-                
             }
-            
         });
 
-        setLayout(new GridBagLayout());
-        add(new JScrollPane(table));
-        add(choicePannel);
-        add(panelButton);
+        JButton articlesButton = new JButton("Articles");
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        tablePanel.add(articlesButton, gbc);
+        
+        JButton commentsButton = new JButton("Comments");
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        tablePanel.add(commentsButton, gbc);
+
+        setLayout(new GridLayout(0, 1, 10, 10));
+        add(tablePanel);
         setTitle("R17 DATABASE");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setSize(1150, 650);
+        setSize(650, 500);
         setLocationRelativeTo(null);
         setVisible(true);
+        //pack();
     }
 
     public static void main(String[] args) throws Exception {

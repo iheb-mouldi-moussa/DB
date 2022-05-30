@@ -8,8 +8,13 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.InsetsUIResource;
+import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import DAO.AuthorsDAO;
 import Tables.Authors;
@@ -28,6 +33,7 @@ public class AuthorsFrame extends JFrame {
         defaultTableModel = new DefaultTableModel();
         table = new JTable(defaultTableModel);
         table.setPreferredScrollableViewportSize(new Dimension(500, 100));
+        table.setAutoCreateRowSorter(true);
         // table.setFillsViewportHeight(true);
         // table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         defaultTableModel.addColumn("id");
@@ -84,6 +90,47 @@ public class AuthorsFrame extends JFrame {
         gbc.gridy = 3;
         consolPanel.add(emailText, gbc);
 
+        JLabel searchLabel = new JLabel("Search");
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        consolPanel.add(searchLabel, gbc);
+        JTextField searchTextField = new JTextField(30);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        consolPanel.add(searchTextField, gbc);
+        TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sort);
+        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                String str = searchTextField.getText();
+                if (str.trim().length() == 0) {
+                    sort.setRowFilter(null);
+                } else {
+                    // (?i) means case insensitive search
+                    sort.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+                }
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                String str = searchTextField.getText();
+                if (str.trim().length() == 0) {
+                    sort.setRowFilter(null);
+                } else {
+                    sort.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+                }
+            }
+
+        });
+
         JButton addButton = new JButton("Add");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 12, 0, 0);
@@ -129,8 +176,6 @@ public class AuthorsFrame extends JFrame {
             }
         });
 
-        
-
         JButton delButton = new JButton("Delete");
         gbc.gridx = 2;
         gbc.gridy = 1;
@@ -174,11 +219,25 @@ public class AuthorsFrame extends JFrame {
             }
         });
 
-
-        JButton searchButton = new JButton("Search");
+        JButton backButton = new JButton("Back");
         gbc.gridx = 2;
         gbc.gridy = 2;
-        consolPanel.add(searchButton, gbc);
+        consolPanel.add(backButton, gbc);
+
+        backButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                dispose();
+                MainFrame mainFrame = new MainFrame();
+                try {
+                    mainFrame.init();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
         JButton exitButton = new JButton("Exit");
         gbc.gridx = 2;
@@ -194,7 +253,8 @@ public class AuthorsFrame extends JFrame {
                 loginFrame.init();
             }
         });
-        setLayout(new GridLayout(0, 2, 10, 10));
+
+        setLayout(new GridLayout(0, 2, 10, 40));
         add(tablePanel);
         add(consolPanel);
         setLocationRelativeTo(null);
@@ -203,6 +263,7 @@ public class AuthorsFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         validate();
         pack();
+
     }
 
     public static void main(String[] args) {
@@ -210,7 +271,6 @@ public class AuthorsFrame extends JFrame {
         try {
             authorsFrame.init();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

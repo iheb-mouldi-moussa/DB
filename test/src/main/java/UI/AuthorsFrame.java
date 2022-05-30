@@ -27,7 +27,7 @@ public class AuthorsFrame extends JFrame {
     private JTable table;
     private AuthorsDAO authorsDAO;
     private LoginFrame loginFrame;
-
+    private static boolean isDisposed = false;
     public void init() throws Exception {
         authorsDAO = new AuthorsDAO();
         defaultTableModel = new DefaultTableModel();
@@ -98,8 +98,7 @@ public class AuthorsFrame extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 4;
         consolPanel.add(searchTextField, gbc);
-        TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
-        table.setRowSorter(sort);
+
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -110,6 +109,8 @@ public class AuthorsFrame extends JFrame {
             @Override
             public void insertUpdate(DocumentEvent arg0) {
                 String str = searchTextField.getText();
+                TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
+                table.setRowSorter(sort);
                 if (str.trim().length() == 0) {
                     sort.setRowFilter(null);
                 } else {
@@ -122,6 +123,8 @@ public class AuthorsFrame extends JFrame {
             @Override
             public void removeUpdate(DocumentEvent arg0) {
                 String str = searchTextField.getText();
+                TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
+                table.setRowSorter(sort);
                 if (str.trim().length() == 0) {
                     sort.setRowFilter(null);
                 } else {
@@ -164,8 +167,8 @@ public class AuthorsFrame extends JFrame {
                                 author.getFirstname(),
                                 author.getLastname(), author.getMail() });
                     }
-
                     table.setModel(model);
+ 
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (Exception e) {

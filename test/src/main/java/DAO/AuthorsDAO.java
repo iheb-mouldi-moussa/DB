@@ -2,7 +2,7 @@ package DAO;
 
 import java.util.*;
 
-import Helpers.Helper;
+import Helpers.HelperDB;
 import Tables.Authors;
 
 import java.sql.*;
@@ -17,11 +17,11 @@ public class AuthorsDAO {
 	public AuthorsDAO() throws Exception {
 
 		// connect to database
-		myConn = Helper.getConnection();
-		System.out.println("DB connection successful to: " + Helper.getUrl());
+		myConn = HelperDB.getConnection();
+		System.out.println("DB connection successful to: " + HelperDB.getUrl());
 	}
 
-	public List<Authors> getAllAuthorss() throws Exception {
+	public List<Authors> getAllAuthors() throws Exception {
 		List<Authors> list = new ArrayList<>();
 
 		Statement myStmt = null;

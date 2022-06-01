@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Helper {
+public class HelperDB {
 
     private static Properties props;
     private static Properties getConnectionData() {
@@ -24,7 +24,7 @@ public class Helper {
         try (FileInputStream in = new FileInputStream(fileName)) {
             props.load(in);
         } catch (IOException ex) {
-            Logger lgr = Logger.getLogger(Helper.class.getName());
+            Logger lgr = Logger.getLogger(HelperDB.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
 

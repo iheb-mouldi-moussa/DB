@@ -17,6 +17,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import DAO.AuthorsDAO;
+import Helpers.HelperFrame;
 import Tables.Authors;
 import javafx.event.Event;
 import javafx.scene.control.ButtonType;
@@ -27,7 +28,6 @@ public class AuthorsFrame extends JFrame {
     private JTable table;
     private AuthorsDAO authorsDAO;
     private LoginFrame loginFrame;
-    private static boolean isDisposed = false;
     public void init() throws Exception {
         authorsDAO = new AuthorsDAO();
         defaultTableModel = new DefaultTableModel();
@@ -36,17 +36,8 @@ public class AuthorsFrame extends JFrame {
         table.setAutoCreateRowSorter(true);
         // table.setFillsViewportHeight(true);
         // table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-        defaultTableModel.addColumn("id");
-        defaultTableModel.addColumn("FirstName");
-        defaultTableModel.addColumn("LastName");
-        defaultTableModel.addColumn("Email");
 
-        List<Authors> authors = authorsDAO.getAllAuthorss();
-        for (Authors author : authors) {
-            defaultTableModel.addRow(new Object[] { author.getId(), author.getFirstname(),
-                    author.getLastname(), author.getMail() });
-        }
-
+        HelperFrame.updateTable(table, defaultTableModel, authorsDAO);
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -55,49 +46,32 @@ public class AuthorsFrame extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         JLabel id = new JLabel("id");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        consolPanel.add(id, gbc);
+        HelperFrame.addToPanel(id, gbc, consolPanel, 0, 0);
         JTextField idText = new JTextField(11);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        consolPanel.add(idText, gbc);
+        HelperFrame.addToPanel(idText, gbc, consolPanel, 1, 0);
 
         JLabel firstNameLabel = new JLabel("Firstname");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        consolPanel.add(firstNameLabel, gbc);
+        HelperFrame.addToPanel(firstNameLabel, gbc, consolPanel, 0, 1);
         JTextField firstNameText = new JTextField(11);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        consolPanel.add(firstNameText, gbc);
+        HelperFrame.addToPanel(firstNameText, gbc, consolPanel, 1, 1);
+            
 
         JLabel lastNameLabel = new JLabel("Lastname");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        consolPanel.add(lastNameLabel, gbc);
+        HelperFrame.addToPanel(lastNameLabel, gbc, consolPanel, 0, 2);
+
         JTextField lastNameText = new JTextField(11);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        consolPanel.add(lastNameText, gbc);
+        HelperFrame.addToPanel(lastNameText, gbc, consolPanel, 1, 2);
 
         JLabel emailLabel = new JLabel("Email");
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        consolPanel.add(emailLabel, gbc);
+        HelperFrame.addToPanel(emailLabel, gbc, consolPanel, 0, 3);
         JTextField emailText = new JTextField(11);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        consolPanel.add(emailText, gbc);
+        HelperFrame.addToPanel(emailText, gbc, consolPanel, 1, 3);
 
         JLabel searchLabel = new JLabel("Search");
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        consolPanel.add(searchLabel, gbc);
+        HelperFrame.addToPanel(searchLabel, gbc, consolPanel, 0, 4);
+        
         JTextField searchTextField = new JTextField(30);
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        consolPanel.add(searchTextField, gbc);
+        HelperFrame.addToPanel(searchTextField, gbc, consolPanel, 1, 4);
 
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -108,28 +82,14 @@ public class AuthorsFrame extends JFrame {
 
             @Override
             public void insertUpdate(DocumentEvent arg0) {
-                String str = searchTextField.getText();
-                TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
-                table.setRowSorter(sort);
-                if (str.trim().length() == 0) {
-                    sort.setRowFilter(null);
-                } else {
-                    // (?i) means case insensitive search
-                    sort.setRowFilter(RowFilter.regexFilter("(?i)" + str));
-                }
+
+                HelperFrame.addDynamicSearch(table, searchTextField);
 
             }
 
             @Override
             public void removeUpdate(DocumentEvent arg0) {
-                String str = searchTextField.getText();
-                TableRowSorter<TableModel> sort = new TableRowSorter<>(table.getModel());
-                table.setRowSorter(sort);
-                if (str.trim().length() == 0) {
-                    sort.setRowFilter(null);
-                } else {
-                    sort.setRowFilter(RowFilter.regexFilter("(?i)" + str));
-                }
+                HelperFrame.addDynamicSearch(table, searchTextField);
             }
 
         });
@@ -137,10 +97,7 @@ public class AuthorsFrame extends JFrame {
         JButton addButton = new JButton("Add");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 12, 0, 0);
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        consolPanel.add(addButton, gbc);
-
+        HelperFrame.addToPanel(addButton, gbc, consolPanel, 2, 0);
         addButton.addActionListener(new ActionListener() {
 
             @Override
@@ -150,23 +107,13 @@ public class AuthorsFrame extends JFrame {
                 String lastName = lastNameText.getText();
                 String temp = idText.getText();
                 String email = emailText.getText();
-                int id = 0;
+                int id = -1;
 
                 try {
                     id = Integer.parseInt(temp);
                     authorsDAO.addAuthor(id, firstName, lastName, email);
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("id");
-                    model.addColumn("FirstName");
-                    model.addColumn("LastName");
-                    model.addColumn("Email");
-
-                    List<Authors> authors = authorsDAO.getAllAuthorss();
-                    for (Authors author : authors) {
-                        model.addRow(new Object[] { author.getId(),
-                                author.getFirstname(),
-                                author.getLastname(), author.getMail() });
-                    }
+                    HelperFrame.updateTable(table, model, authorsDAO);
                     table.setModel(model);
  
                 } catch (SQLException e) {
@@ -180,10 +127,7 @@ public class AuthorsFrame extends JFrame {
         });
 
         JButton delButton = new JButton("Delete");
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        consolPanel.add(delButton, gbc);
-
+        HelperFrame.addToPanel(delButton, gbc, consolPanel, 2, 1);
         delButton.addActionListener(new ActionListener() {
 
             @Override
@@ -199,18 +143,7 @@ public class AuthorsFrame extends JFrame {
                     id = Integer.parseInt(temp);
                     authorsDAO.delAuthor(id, firstName, lastName, email);
                     DefaultTableModel model = new DefaultTableModel();
-                    model.addColumn("id");
-                    model.addColumn("FirstName");
-                    model.addColumn("LastName");
-                    model.addColumn("Email");
-
-                    List<Authors> authors = authorsDAO.getAllAuthorss();
-                    for (Authors author : authors) {
-                        model.addRow(new Object[] { author.getId(),
-                                author.getFirstname(),
-                                author.getLastname(), author.getMail() });
-                    }
-
+                    HelperFrame.updateTable(table, model, authorsDAO);
                     table.setModel(model);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -223,10 +156,7 @@ public class AuthorsFrame extends JFrame {
         });
 
         JButton backButton = new JButton("Back");
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        consolPanel.add(backButton, gbc);
-
+        HelperFrame.addToPanel(backButton, gbc, consolPanel, 2, 2);
         backButton.addActionListener(new ActionListener() {
 
             @Override
@@ -243,9 +173,7 @@ public class AuthorsFrame extends JFrame {
         });
 
         JButton exitButton = new JButton("Exit");
-        gbc.gridx = 2;
-        gbc.gridy = 3;
-        consolPanel.add(exitButton, gbc);
+        HelperFrame.addToPanel(exitButton, gbc, consolPanel, 2, 3);
 
         exitButton.addActionListener(new ActionListener() {
 

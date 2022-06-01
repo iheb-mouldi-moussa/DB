@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.*;
 
 
-import Helpers.Helper;
+import Helpers.HelperDB;
 import Tables.AllTables;
 public class TablesDAO {
 
@@ -14,8 +14,8 @@ public class TablesDAO {
 	public TablesDAO() throws Exception {
 		
 		// connect to database
-		myConn = Helper.getConnection();
-		System.out.println("DB connection successful to: " + Helper.getUrl());
+		myConn = HelperDB.getConnection();
+		System.out.println("DB connection successful to: " + HelperDB.getUrl());
     }
 
 

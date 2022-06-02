@@ -45,16 +45,17 @@ CREATE TABLE IF NOT EXISTS `r17DB`.`Articles` (
   `title` VARCHAR(70) NULL,
   `content` LONGTEXT NULL,
   `summary` LONGTEXT NULL,
-  `Authors_id` INT NOT NULL,
+  `likes` INT,
+  `author_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Articles_Authors1`
-    FOREIGN KEY (`Authors_id`)
+    FOREIGN KEY (`Author_id`)
     REFERENCES `r17DB`.`Authors` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Articles_Authors1_idx` ON `r17DB`.`Articles` (`Authors_id` ASC) VISIBLE;
+CREATE INDEX `fk_Articles_Authors1_idx` ON `r17DB`.`Articles` (`Author_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------

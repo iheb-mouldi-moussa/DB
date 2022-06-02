@@ -69,7 +69,7 @@ public class ArticlesDAO {
         return true;
     }
 
-    public void likeArticle(Articles articles)
+    /*public void likeArticle(Articles articles)
     {
         int currLike = articles.getLikes();
         articles.setLikes(++currLike);
@@ -79,7 +79,7 @@ public class ArticlesDAO {
     {
         int currLike = articles.getLikes();
         articles.setLikes(--currLike);
-    }
+    }*/
 
 	public void addArticle(int id, String title, String content, String summary, int likes, int author_id) throws SQLException {
 
@@ -120,7 +120,7 @@ public class ArticlesDAO {
 		myStmt = myConn.prepareStatement("select * from Authors where Authors.id=?");
 		myStmt.setInt(1, author_id);
 		myRs =  myStmt.executeQuery();
-		int res = -1;
+		//int res = -1;
 		if(myRs.next())
 		{
 			author = new Authors(myRs.getInt("id"), myRs.getString("Firstname"),

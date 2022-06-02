@@ -37,7 +37,7 @@ public class AuthorsFrame extends JFrame {
         // table.setFillsViewportHeight(true);
         // table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
-        HelperFrame.updateTable(table, defaultTableModel, authorsDAO);
+        HelperFrame.updateTableAuthors(defaultTableModel, authorsDAO);
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -113,7 +113,7 @@ public class AuthorsFrame extends JFrame {
                     id = Integer.parseInt(temp);
                     authorsDAO.addAuthor(id, firstName, lastName, email);
                     DefaultTableModel model = new DefaultTableModel();
-                    HelperFrame.updateTable(table, model, authorsDAO);
+                    HelperFrame.updateTableAuthors(model, authorsDAO);
                     table.setModel(model);
  
                 } catch (SQLException e) {
@@ -143,7 +143,7 @@ public class AuthorsFrame extends JFrame {
                     id = Integer.parseInt(temp);
                     authorsDAO.delAuthor(id, firstName, lastName, email);
                     DefaultTableModel model = new DefaultTableModel();
-                    HelperFrame.updateTable(table, model, authorsDAO);
+                    HelperFrame.updateTableAuthors(model, authorsDAO);
                     table.setModel(model);
                 } catch (SQLException e) {
                     e.printStackTrace();

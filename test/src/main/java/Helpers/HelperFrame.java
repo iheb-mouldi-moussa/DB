@@ -10,8 +10,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import DAO.ArticlesDAO;
 import DAO.AuthorsDAO;
+import Tables.Articles;
 import Tables.Authors;
+import ch.qos.logback.classic.db.names.DefaultDBNameResolver;
 
 import java.awt.GridBagConstraints;
 import java.util.List;
@@ -40,7 +43,7 @@ public class HelperFrame {
     }
 
 
-    public static void updateTable(JTable table, DefaultTableModel defaultTableModel, AuthorsDAO authorsDAO) throws Exception
+    public static void updateTableAuthors(DefaultTableModel defaultTableModel, AuthorsDAO authorsDAO) throws Exception
     {
         defaultTableModel.addColumn("id");
         defaultTableModel.addColumn("FirstName");
@@ -51,6 +54,23 @@ public class HelperFrame {
         for (Authors author : authors) {
             defaultTableModel.addRow(new Object[] { author.getId(), author.getFirstname(),
                     author.getLastname(), author.getMail() });
+        }
+    }
+
+    public static void updateTableArticles(DefaultTableModel defaultTableModel, ArticlesDAO articlesDAO) throws Exception
+    {
+        defaultTableModel.addColumn("id");
+        defaultTableModel.addColumn("Title");
+        defaultTableModel.addColumn("Content");
+        defaultTableModel.addColumn("Summary");
+        defaultTableModel.addColumn("Likes");
+        defaultTableModel.addColumn("Author_ID");
+
+        List<Articles> articles = articlesDAO.getAllArticles();
+        for (Articles article : articles) {
+            defaultTableModel.addRow(new Object[] { article.getId(), article.getTitle(),
+                    article.getContent(), article.getSummary(), 
+                    article.getLikes(), article.getAuthor_id() });
         }
     }
 }

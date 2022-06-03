@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
     private DefaultTableModel defaultTableModel;
     private JTable table;
     private AuthorsFrame authorsFrame;
-    private ArticleFrame artcileFrame;
+    private ArticleFrame articleFrame;
     public void init() throws Exception {
 
         tablesDAO = new TablesDAO();
@@ -81,9 +81,9 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                artcileFrame = new ArticleFrame();
+                articleFrame = new ArticleFrame();
                 try {
-                    authorsFrame.init();
+                    articleFrame.init();
                     dispose();
                 } catch (Exception e1) {
                     e1.printStackTrace();

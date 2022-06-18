@@ -2,7 +2,6 @@ package DAO;
 
 import java.util.*;
 
-import javax.persistence.Lob;
 
 import Helpers.HelperDB;
 import Tables.Articles;
@@ -103,7 +102,7 @@ public class ArticlesDAO {
 
 	}
 
-    public Articles geArticles(int articleId) throws SQLException
+    public Articles getArticles(int articleId) throws SQLException
     {
         Articles article = null;
         myStmt = myConn.prepareStatement("select * from Articles where id=?");
@@ -177,7 +176,7 @@ public class ArticlesDAO {
 
     public static void main(String[] args) throws Exception {
         ArticlesDAO articlesDAO = new ArticlesDAO();
-        System.out.print(articlesDAO.geArticles(1));
+        System.out.print(articlesDAO.getArticles(1));
         //System.out.println(articlesDAO.getArticleAuthor(1));
         //System.out.println(articlesDAO.getAllArticles());
     }

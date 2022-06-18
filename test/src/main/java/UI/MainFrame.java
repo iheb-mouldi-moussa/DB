@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     private JTable table;
     private AuthorsFrame authorsFrame;
     private ArticleFrame articleFrame;
+    private CommentsFrame commentsFrame;
     public void init() throws Exception {
 
         tablesDAO = new TablesDAO();
@@ -92,10 +93,26 @@ public class MainFrame extends JFrame {
         });
         
         
-        JButton commentsButton = new JButton("Comments");
+        JButton commentButton = new JButton("Comments");
         gbc.gridx = 3;
         gbc.gridy = 1;
-        tablePanel.add(commentsButton, gbc);
+        tablePanel.add(commentButton, gbc);
+
+        commentButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                commentsFrame = new CommentsFrame();
+                try {
+                    commentsFrame.init();
+                    dispose();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        
 
         setLayout(new GridLayout(0, 1, 10, 10));
         add(tablePanel);
